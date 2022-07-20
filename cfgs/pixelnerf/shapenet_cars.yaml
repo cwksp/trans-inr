@@ -1,0 +1,54 @@
+trainer: nvs_trainer
+
+train_dataset:
+  name: pixelnerf_shapenet
+  args:
+    root_path: $load_root$/trans-nf/pixelnerf/srn_cars
+    category: cars
+    split: train
+    n_support: 1
+    n_query: 1
+    repeat: 3
+  loader:
+    batch_size: 32
+    num_workers: 8
+
+test_dataset:
+  name: pixelnerf_shapenet
+  args:
+    root_path: $load_root$/trans-nf/pixelnerf/srn_cars
+    category: cars
+    split: test
+    n_support: 1
+    n_query: 1
+    repeat: 10
+  loader:
+    batch_size: 32
+    num_workers: 8
+
+model:
+  name: trans_hybrid_nf
+  args:
+    tokenizer:
+      name: nvs_tokenizer
+      args: {input_size: 128, patch_size: 8}
+    hyponet:
+      name: hypo_hybrid_nerf
+      args: {use_viewdirs: true}
+    n_groups: 32
+    transformer_encoder:
+      name: transformer_encoder
+      args: {dim: 512, depth: 6, n_head: 8, head_dim: 64, ff_dim: 2048}
+
+train_points_per_ray: 128
+train_n_rays: 128
+render_ray_batch: 1024
+
+optimizer:
+  name: adam
+  args: {lr: 1.e-4}
+max_epoch: 1000
+adaptive_sample_epoch: 1
+
+eval_epoch: 10
+vis_epoch: 125

@@ -1,0 +1,21 @@
+trainer: nvs_trainer
+
+eval_model: save/0221-pn_shapenet_cars-transnf_h/epoch-last.pth
+
+test_dataset:
+  name: pixelnerf_shapenet
+  args:
+    root_path: $load_root$/trans-nf/pixelnerf/srn_cars
+    category: cars
+    split: test
+    n_support: 1
+    n_query: 1
+    support_lst: [64]
+    repeat: 10
+  loader:
+    batch_size: 8
+    num_workers: 8
+
+train_points_per_ray: 128
+train_n_rays: 128
+render_ray_batch: 1024
